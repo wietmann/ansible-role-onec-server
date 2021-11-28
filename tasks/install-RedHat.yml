@@ -26,8 +26,8 @@
     name: "{{ item }}"
     state: installed
   loop:
-    - "{{ onec_haspd_rpm }}"
-    - "{{ onec_haspd_modules_rpm }}"
+    - "{{ onec_haspd_package }}"
+    - "{{ onec_haspd_modules_package }}"
   when: onec_install_haspd
 
 - name: Ensure HASPd service is started and enabled
