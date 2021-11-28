@@ -1,0 +1,26 @@
+---
+- name: (RedHat) Load distro specific variables
+  include_vars: "RedHat.yml"
+  when:
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution != 'Fedora'
+
+# - name: (Debian) Load distro specific variables
+#   include_vars: "Debian.yml"
+#   when:
+#     - ansible_distribution == 'Debian'
+
+- name: (RedHat) Set variable onec_mscorefonts_rpm
+  set_fact:
+    onec_mscorefonts_rpm: "{{ _onec_mscorefonts_rpm }}"
+  when: ansible_os_family == 'RedHat'
+
+- name: (RedHat) Set variable onec_haspd_rpm_url
+  set_fact:
+    onec_haspd_rpm: "{{ _onec_haspd_rpm }}"
+  when: ansible_os_family == 'RedHat'
+
+- name: (RedHat) Set variable onec_haspd_modules_rpm_url
+  set_fact:
+    onec_haspd_modules_rpm: "{{ _onec_haspd_modules_rpm }}"
+  when: ansible_os_family == 'RedHat'

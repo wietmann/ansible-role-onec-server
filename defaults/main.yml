@@ -1,0 +1,3 @@
+---
+onec_install_haspd: True
+onec_selinux_state: "permissive"

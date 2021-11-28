@@ -1,0 +1,4 @@
+---
+_onec_mscorefonts_rpm: "https://sourceforge.net/projects/mscorefonts2/files/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm/download"
+_onec_haspd_rpm: http://ftp.etersoft.ru/pub/Etersoft/HASP/stable/CentOS/7/haspd-7.90-eter2centos.x86_64.rpm
+_onec_haspd_modules_rpm: http://ftp.etersoft.ru/pub/Etersoft/HASP/stable/CentOS/7/haspd-modules-7.90-eter2centos.x86_64.rpm

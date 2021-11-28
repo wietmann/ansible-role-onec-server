@@ -1,0 +1,26 @@
+---
+- include_tasks:
+    file: variables.yml
+
+# - include_tasks:
+#     file: install.yml
+
+- name: (RedHat) Load installation tasks
+  include_tasks:
+    file: "install-RedHat.yml"
+  when:
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution != 'Fedora'
+
+# - name: (Debian) Load installation tasks
+#   # include_tasks: "{{ item }}"
+#   include_tasks:
+#     file: "install-Debian.yml"
+#     apply:
+#       tags: ['nftables_install']
+#   # ignore_errors: yes
+#   # with_first_found:
+#   #   - "install-{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+#   #   - "install-{{ ansible_distribution | lower }}.yml"
+#   when:
+#     - ansible_distribution == 'Debian'
