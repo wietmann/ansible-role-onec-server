@@ -36,3 +36,67 @@
     state: started
     enabled: yes
   when: onec_install_haspd
+
+# 1C_Enterprise83-common is a major dependency of all other packages
+- name: Gather info about installed 1C server common package
+  yum:
+    list: "1C_Enterprise83-common"
+  register: onec_package_status
+
+- name: Set different release flag
+  set_fact:
+    onec_different_release_installed: yes
+  when: (onec_package_status.results | length) > 0 and (onec_package_status.results[0].version != onec_version or onec_package_status.results[0].release != onec_release)
+
+- name: Stop and disable 1C systemd service
+  systemd:
+    service: srv1cv83
+    state: stopped
+    enabled: no
+  when: onec_different_release_installed is defined
+
+- name: Remove all 1C packages from different release
+  yum:
+    # name: "1C_Enterprise83-{{ item }}"
+    name:
+      - "1C_Enterprise83-common"
+      - "1C_Enterprise83-common-nls"
+      - "1C_Enterprise83-server"
+      - "1C_Enterprise83-server-nls"
+      - "1C_Enterprise83-ws"
+      - "1C_Enterprise83-ws-nls"
+      - "1C_Enterprise83-crs"
+    state: removed
+  # loop:
+  #   - common
+  #   - common-nls
+  #   - server
+  #   - server-nls
+  #   - ws
+  #   - ws-nls
+  #   - crs
+  when: onec_different_release_installed is defined
+
+- name: Install dependencies
+  yum:
+    name: "{{ onec_dependencies }}"
+    state: installed
+
+- name: Form 1C packages list
+  set_fact:
+    onec_packages: '{{ (onec_packages | default([])) + [ onec_packages_dir + "/1C_Enterprise83-" + item + "-" + onec_version + "-" + onec_release + ".x86_64.rpm" ] }}'
+  loop: "{{ onec_server_components }}"
+
+# - debug:
+#     var: onec_packages
+
+- name: Install 1C packages
+  yum:
+    name: "{{ onec_packages }}"
+    state: installed
+
+- name: Ensure 1C service is started and enabled
+  systemd:
+    service: srv1cv83
+    state: started
+    enabled: yes
