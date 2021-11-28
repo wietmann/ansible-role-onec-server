@@ -1,7 +1,9 @@
 Ansible Role: 1C:Enterprise server
 ==================================
 
-Ansible role to install 1C:Enterprise x86-64 server and related packages on Linux hosts.
+[То же самое на русском](README_ru.md)
+
+This Ansible role installs 1C:Enterprise x86-64 server and related packages on Linux hosts.
 
 This role intends that you have achieved a legal copy of official binary packages and placed them in specific directory on target host's filesystem. You should have valid 1C:Enterprise server and platform licenses and tech support subscription in order to download packages from releases.1c.ru.
 
