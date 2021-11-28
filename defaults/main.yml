@@ -1,12 +1,19 @@
 ---
-onec_version: "8.3.17"
-onec_release: "1989"
-onec_packages_dir: "/vagrant/{{ onec_version }}.{{ onec_release }}"
+# onec_version: "8.3.XX"
+# onec_release: "XXXX"
+# onec_packages_dir: "/..."
 
 onec_install_haspd: True
 onec_selinux_state: "permissive"
 
+onec_service_state: started
+onec_service_enabled: True
+
 onec_server_components:
   - common
+  # - common-nls
   - server
+  # - server-nls
   - ws
+  # - ws-nls
+  # - crs

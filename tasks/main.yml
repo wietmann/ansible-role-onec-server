@@ -1,4 +1,11 @@
 ---
+- name: Check if 1C server version and local packages path are defined
+  assert:
+    that:
+      - onec_version is defined
+      - onec_release is defined
+      - onec_packages_dir is defined
+
 - include_tasks:
     file: variables.yml
 

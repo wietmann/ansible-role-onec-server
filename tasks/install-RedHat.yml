@@ -1,15 +1,15 @@
 ---
-- name: Install libselinux-python
+- name: (RedHat) Install libselinux-python
   yum:
     name: libselinux-python
     state: installed
 
-- name: Ensure SELinux is in defined mode
+- name: (RedHat) Ensure SELinux is in required mode
   selinux:
     state: "{{ onec_selinux_state }}"
     policy: targeted
 
-- name: Setup EPEL repository
+- name: (RedHat) Setup EPEL repository
   yum:
     name: epel-release
     state: installed
@@ -21,16 +21,15 @@
     name: "{{ onec_mscorefonts_rpm }}"
     state: installed
 
-- name: Install HASPd
+- name: (RedHat) Install HASPd
   yum:
-    name: "{{ item }}"
+    name:
+      - "{{ onec_haspd_package }}"
+      - "{{ onec_haspd_modules_package }}"
     state: installed
-  loop:
-    - "{{ onec_haspd_package }}"
-    - "{{ onec_haspd_modules_package }}"
   when: onec_install_haspd
 
-- name: Ensure HASPd service is started and enabled
+- name: (RedHat) Ensure HASPd service is started and enabled
   systemd:
     name: haspd
     state: started
@@ -38,26 +37,25 @@
   when: onec_install_haspd
 
 # 1C_Enterprise83-common is a major dependency of all other packages
-- name: Gather info about installed 1C server common package
+- name: (RedHat) Gather info about installed 1C server common package
   yum:
     list: "1C_Enterprise83-common"
   register: onec_package_status
 
-- name: Set different release flag
+- name: (RedHat) Set different release flag
   set_fact:
     onec_different_release_installed: yes
   when: (onec_package_status.results | length) > 0 and (onec_package_status.results[0].version != onec_version or onec_package_status.results[0].release != onec_release)
 
-- name: Stop and disable 1C systemd service
+- name: (RedHat) Stop and disable 1C systemd service
   systemd:
     service: srv1cv83
     state: stopped
     enabled: no
   when: onec_different_release_installed is defined
 
-- name: Remove all 1C packages from different release
+- name: (RedHat) Remove all 1C packages from different release
   yum:
-    # name: "1C_Enterprise83-{{ item }}"
     name:
       - "1C_Enterprise83-common"
       - "1C_Enterprise83-common-nls"
@@ -67,36 +65,25 @@
       - "1C_Enterprise83-ws-nls"
       - "1C_Enterprise83-crs"
     state: removed
-  # loop:
-  #   - common
-  #   - common-nls
-  #   - server
-  #   - server-nls
-  #   - ws
-  #   - ws-nls
-  #   - crs
   when: onec_different_release_installed is defined
 
-- name: Install dependencies
+- name: (RedHat) Install dependencies
   yum:
     name: "{{ onec_dependencies }}"
     state: installed
 
-- name: Form 1C packages list
+- name: (RedHat) Form 1C packages list
   set_fact:
     onec_packages: '{{ (onec_packages | default([])) + [ onec_packages_dir + "/1C_Enterprise83-" + item + "-" + onec_version + "-" + onec_release + ".x86_64.rpm" ] }}'
   loop: "{{ onec_server_components }}"
 
-# - debug:
-#     var: onec_packages
-
-- name: Install 1C packages
+- name: (RedHat) Install 1C packages
   yum:
     name: "{{ onec_packages }}"
     state: installed
 
-- name: Ensure 1C service is started and enabled
+- name: (RedHat) Ensure 1C service is in required state
   systemd:
     service: srv1cv83
-    state: started
-    enabled: yes
+    state: "{{ onec_service_state }}"
+    enabled: "{{ onec_service_enabled }}"
