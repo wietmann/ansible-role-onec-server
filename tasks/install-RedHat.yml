@@ -20,6 +20,7 @@
   yum:
     name: "{{ onec_mscorefonts_rpm }}"
     state: installed
+  when: onec_install_mscorefonts |bool
 
 - name: (RedHat) Install HASPd
   yum:
@@ -27,14 +28,14 @@
       - "{{ onec_haspd_package }}"
       - "{{ onec_haspd_modules_package }}"
     state: installed
-  when: onec_install_haspd
+  when: onec_install_haspd |bool
 
 - name: (RedHat) Ensure HASPd service is started and enabled
   systemd:
     name: haspd
     state: started
     enabled: yes
-  when: onec_install_haspd
+  when: onec_install_haspd |bool
 
 # 1C_Enterprise83-common is a major dependency of all other packages
 - name: (RedHat) Gather info about installed 1C server common package

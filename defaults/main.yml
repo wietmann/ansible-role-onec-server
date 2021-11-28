@@ -4,6 +4,7 @@
 # onec_packages_dir: "/..."
 
 onec_install_haspd: True
+onec_install_mscorefonts: True
 onec_selinux_state: "permissive"
 
 onec_service_state: started
