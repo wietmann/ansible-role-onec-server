@@ -1,4 +1,17 @@
 ---
+# https://stackoverflow.com/a/59704215
+- name: Determine defined locales are present
+  shell: "locale -a | grep -i {{ item | regex_replace('-', '') | quote }}"
+  register: found_locales
+  changed_when: false
+  failed_when: false
+  loop: "{{ onec_system_locales }}"
+
+- name: Create missing locales
+  command: "localedef -i {{ item.item | regex_replace('(.*)\\..*', '\\1') | quote }} -f {{ item.item | regex_replace('.*\\.(.*)', '\\1') | quote }} {{ item.item | quote }}"
+  when: item.rc != 0
+  loop: "{{ found_locales.results }}"
+
 - name: (RedHat) Install libselinux-python
   yum:
     name: libselinux-python

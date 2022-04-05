@@ -18,3 +18,7 @@ onec_server_components:
   - ws
   # - ws-nls
   # - crs
+
+onec_system_locales:
+  - ru_RU.UTF-8
+  - en_US.UTF-8
