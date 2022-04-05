@@ -13,16 +13,16 @@
 - name: (RedHat) Set variable onec_mscorefonts_rpm
   set_fact:
     onec_mscorefonts_rpm: "{{ _onec_mscorefonts_rpm }}"
-  when: ansible_os_family == 'RedHat'
+  when:
+    - ansible_os_family == 'RedHat'
+    - onec_mscorefonts_rpm is not defined
 
-- name: Set variable onec_haspd_package
+- name: Set variable onec_haspd_packages
   set_fact:
-    onec_haspd_package: "{{ _onec_haspd_package }}"
-
-- name: Set variable onec_haspd_modules_package
-  set_fact:
-    onec_haspd_modules_package: "{{ _onec_haspd_modules_package }}"
+    onec_haspd_packages: "{{ _onec_haspd_packages }}"
+  when: onec_haspd_packages is not defined
 
 - name: Set variable onec_dependencies
   set_fact:
     onec_dependencies: "{{ _onec_dependencies }}"
+  when: onec_dependencies is not defined

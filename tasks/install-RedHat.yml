@@ -37,9 +37,7 @@
 
 - name: (RedHat) Install HASPd
   yum:
-    name:
-      - "{{ onec_haspd_package }}"
-      - "{{ onec_haspd_modules_package }}"
+    name: "{{ onec_haspd_packages }}"
     state: installed
   when: onec_install_haspd |bool
 
